@@ -47,6 +47,12 @@ This project focuses on analyzing regional sales data to uncover trends, evaluat
 * Visualized KPIs such as revenue, sales trends, and regional performance
 * Highlighted top-performing regions and products
 
+<img width="2002" height="1118" alt="Screenshot 2026-09-08 134829" src="https://github.com/user-attachments/assets/fa8f161e-005a-4fb1-a3c9-65683cb2609c" />
+
+
+<img width="2006" height="1128" alt="image" src="https://github.com/user-attachments/assets/65b4b96b-3f13-4011-9046-e12ee443cd71" />
+
+
 📄 File: `sales analysis dashboard.pbix`
 
 ---
