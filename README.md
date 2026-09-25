@@ -53,7 +53,6 @@ Keeping cleaning and transformation entirely in Python before anything reaches P
 <img width="2006" height="1128" alt="image" src="https://github.com/user-attachments/assets/65b4b96b-3f13-4011-9046-e12ee443cd71" />
 
 **Geographic & Customer Insights**
-![Geographic and Customer Insights dashboard](powerbi_dashboard_3.png)
 
 <img width="1992" height="1132" alt="image" src="https://github.com/user-attachments/assets/4a65b524-db13-4433-bd23-cdf649409a78" />
 
