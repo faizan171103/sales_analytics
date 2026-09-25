@@ -1,13 +1,14 @@
-# 🛍️ Customer Behavior Analysis Project
+# 📊 Sales Analytics Project
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat&logo=postgresql&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat&logo=jupyter&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
+![Excel](https://img.shields.io/badge/Excel-217346?style=flat&logo=microsoftexcel&logoColor=white)
 
-An end-to-end customer analytics project that takes raw shopping behavior data through Python-based cleaning and EDA, SQL-driven business analysis, and into an interactive Power BI dashboard covering subscription behavior, category performance, and demographic trends.
+An end-to-end sales analytics project that takes a raw regional sales dataset through Python-based cleaning and exploratory analysis and into a three-page executive Power BI dashboard covering revenue trends, product/channel performance, and geographic customer insights.
 
-Written for two audiences: as the person building the pipeline, you'll find the methodology and a reproducibility note worth acting on; as the analyst reading the output, you'll find the actual findings and recommendations pulled from the dashboard.
+Written for two audiences: as the person building the pipeline, you'll find the data preparation methodology and reproducibility notes; as the analyst reading the output, you'll find the actual findings and recommendations pulled from the dashboard.
 
 ---
 
@@ -15,11 +16,12 @@ Written for two audiences: as the person building the pipeline, you'll find the 
 
 | Metric | Value |
 |---|---|
-| Number of Customers | **3.9K** |
-| Average Purchase Amount | **$59.76** |
-| Average Review Rating | **3.75 / 5** |
-| Subscribed Customers | **27%** |
-| Non-Subscribed Customers | **73%** |
+| Total Revenue | **$1.2B** |
+| Total Profit | **~$461M** |
+| Profit Margin | **37.36%** |
+| Total Orders | **64K** |
+| Revenue per Order | **$19.3K** |
+| Top State (California) | **19.5% of revenue ($228.8M)** |
 
 ---
 
@@ -27,72 +29,114 @@ Written for two audiences: as the person building the pipeline, you'll find the 
 
 ```mermaid
 flowchart TD
-    A[Raw Shopping Behavior Data] --> B[Python: Cleaning & EDA]
-    B --> C[customer_behavior_of_shopping.ipynb]
-    C --> D[SQL: Business Analysis]
-    D --> E[customer_behavior_analysis.sql]
-    E --> F[Power BI: customer_behavior_dashboard.pbix]
-    F --> G[Report & Recommendations]
+    A[Regional Sales Dataset.xlsx] --> B[Python: Cleaning & EDA]
+    B --> C[Sales data after EDA.csv]
+    C --> D[Power BI: sales analysis dashboard.pbix]
+    D --> E[Executive Overview & Trends]
+    D --> F[Product & Channel Performance]
+    D --> G[Geographic & Customer Insights]
+    E --> H[Business Decisions]
+    F --> H
+    G --> H
 ```
 
-Splitting the pipeline this way keeps each stage doing one job: Python handles data quality and shape, SQL handles business-logic questions (segments, loyalty, retention) against the cleaned data, and Power BI is purely a presentation layer on top of already-validated numbers.
+Keeping cleaning and transformation entirely in Python before anything reaches Power BI means every number on the dashboard traces back to a reproducible, version-controlled step — not a manual Excel edit that can't be audited later.
 
 ---
 
-## Dashboard
+## Dashboards
+
+**Executive Overview & Trends**
+<img width="2002" height="1118" alt="Screenshot 2026-09-08 134829" src="https://github.com/user-attachments/assets/fa8f161e-005a-4fb1-a3c9-65683cb2609c" />
+
+**Product & Channel Performance**
+<img width="2006" height="1128" alt="image" src="https://github.com/user-attachments/assets/65b4b96b-3f13-4011-9046-e12ee443cd71" />
+
+**Geographic & Customer Insights**
+![Geographic and Customer Insights dashboard](powerbi_dashboard_3.png)
+
+<img width="1992" height="1132" alt="image" src="https://github.com/user-attachments/assets/4a65b524-db13-4433-bd23-cdf649409a78" />
 
 
-<img width="1306" height="726" alt="image" src="https://github.com/user-attachments/assets/b8b28017-a406-4681-abd2-b22211f59ce9" />
+*(Export these three pages from the .pbix and place them alongside this README, or replace the paths above with hosted GitHub asset links.)*
+
 ---
 
 ## Building the pipeline: methodology
 
-**1. Data preparation & EDA (`customer_behavior_of_shopping.ipynb`)**
-- Cleaned and preprocessed raw shopping behavior data
-- Handled missing values and inconsistencies
-- Ran exploratory analysis to identify initial patterns before any dashboard work began
+**1. Data preparation & EDA (`sales_analytics.ipynb`)**
+- Imported and profiled the raw regional sales dataset
+- Handled missing values and inconsistent entries (product IDs, channel labels, date formats)
+- Ran exploratory analysis to surface early trends before any visualization work began
 
-**2. Business analysis (`customer_behavior_analysis.sql`)**
-- Simulated business-relevant queries: segmentation, loyalty, retention, and purchase-driver questions
-- Kept these as SQL rather than notebook code so the logic is portable to any warehouse or BI tool later
+**2. Transformation (`Sales data after EDA.csv`)**
+- Structured and exported a clean dataset specifically shaped for Power BI consumption, so the dashboard layer never has to re-clean or re-derive fields the notebook already resolved
 
-**3. Visualization (`customer_behavior_dashboard.pbix`)**
-- One dashboard covering subscription status, category revenue, gender, age group, and location — built to be explored via slicers rather than read as a static report
+**3. Visualization (`sales analysis dashboard.pbix`)**
+- Three purpose-built pages rather than one crowded dashboard: trend-level KPIs, product/channel economics, and geographic/customer detail — each answering a different class of question
 
-**A gap worth closing**
-The location panel shows only four states (Montana, California, Idaho, Illinois). Before drawing conclusions from it, confirm whether that's the full dataset or a scrolled/truncated view — the same pattern showed up as a scrollable, cut-off list in an earlier project's city breakdown. If it's truncated, the "Montana leads" finding below could look very different once the full list is visible.
+**A reproducibility gap worth closing**
+The notebook and the `.pbix` are currently two separate artifacts with no automated link between them — if the raw Excel file is refreshed, someone has to remember to re-run the notebook and re-export the CSV before Power BI reflects it. A short script (or Power Query step) that regenerates the CSV and refreshes the dataset in one action would remove that manual dependency.
+
+**A metric-consistency issue found while reviewing the dashboards**
+The *Profit Pulse* chart on the Executive Overview page peaks in **May**, while the *profit by month* chart on the Geographic & Customer Insights page peaks in **January** with a shape that doesn't match. These are likely built on different filters or aggregation levels (e.g., one may be filtered to a region or product subset), but as they stand, two pages of the same dashboard would give a stakeholder two different answers to "when was our best month?" This should be reconciled — or the filter difference made explicit — before either chart is used for planning.
 
 ---
 
 ## Key findings
 
-**1. The subscription base is the single largest untapped segment.**
-Only **27% of the 3.9K customers are subscribed** — the remaining **73% are not**. At a healthy $59.76 average purchase amount, converting even a modest share of that non-subscribed majority is likely the highest-leverage move available in this dataset, since it doesn't require acquiring a single new customer.
+**1. The channel that makes the least revenue is the most profitable per sale.**
+Export brings in only **14.6% of revenue ($180.6M)** but posts the **highest margin of the three channels (38.01%)** — ahead of Distributor (37.65%) and Wholesale (37.02%), despite Wholesale generating over half of all revenue ($668.2M, 54.06%). The largest channel is quietly the least margin-efficient.
 
-**2. Revenue is concentrated in two of four categories.**
-Clothing and Accessories together account for roughly **70%+ of category revenue**, with Footwear and, especially, Outerwear trailing well behind. That's a meaningful reliance on two categories rather than a balanced product mix.
+**2. The biggest revenue product isn't a top-margin product.**
+Product 26 leads revenue at **$0.12bn**, and Product 25 follows at **$0.11bn** — but neither cracks the top of the margin leaderboard (topped by Product 9 at 40.0%). Only Product 25 appears near the bottom of the margin top-10 (38.0%). The products carrying the most revenue weight are not the ones doing the most profitable work per dollar.
 
-**3. Gender split in sales is close to even.**
-Sales by gender show Male and Female customers contributing similar volumes, with no dominant skew — this is a customer base that doesn't need (and might not respond well to) heavily gender-targeted campaigns.
+**3. Customer concentration risk is low.**
+The top 5 customers by revenue (Aibox Company $13M down to Realbuzz Ltd $11M) total roughly **$58M — under 5% of total revenue**. No single account is large enough to meaningfully threaten the business if lost, which is a genuine structural strength worth protecting rather than a gap to fix.
 
-**4. No single age group dominates — but Young Adults lead.**
-Revenue by age group is fairly evenly spread across Young Adult, Middle Aged, Adult, and Senior, with Young Adult modestly on top. The demographic base is broad rather than concentrated in one cohort.
+**4. California is nearly double the next-largest state, but region-level performance is more balanced.**
+California alone drives **19.5% of revenue ($228.8M)**, almost double Illinois in second place ($111.05M). At the region level, though, West (30.1%), South (27.1%), and Midwest (25.9%) are fairly close together — only Northeast trails meaningfully at **16.9%**.
 
-**5. Montana outperforms California — a result worth verifying, not just accepting.**
-In a typical retail dataset, California (a far larger market) would be expected to lead. Here, Montana tops the location chart. That's either a genuinely interesting regional signal (strong local marketing, less competition) or an artifact of a small/synthetic dataset or a truncated location list — see the data gap flagged above.
+**5. Profit margin doesn't track unit price the way you'd expect.**
+The unit price vs. profit margin scatter shows margins spread roughly 20–60% across every price band, from sub-$1K to $5K–$7K items. High-margin orders exist at every price point — meaning price tier alone isn't what's driving profitability, and something else (customer segment, channel, discounting behavior) is likely the real lever.
 
-**6. A 3.75 average review rating is middling, and nothing on the dashboard yet explains why.**
-There's no cut of review score by category, subscription status, or location, so it's currently impossible to tell whether dissatisfaction is concentrated somewhere specific (a weak category, non-subscribers) or spread evenly across the base.
+**6. Order volume is dominated by many small transactions, not a few large ones.**
+The order value spectrum is sharply right-skewed: the vast majority of the ~64K orders fall under $100K, with a long thin tail out to $0.5M. Operational efficiency at high order volume matters more here than managing a handful of large deals.
 
 ---
 
 ## Recommendations, ranked by expected impact
 
-1. **Launch a subscription-conversion campaign targeting the 73% non-subscribed base.** This is the highest-leverage lever visible in the data — a modest conversion rate improvement compounds against an already-solid $59.76 average purchase amount without any new customer acquisition cost.
-2. **Investigate why Footwear and Outerwear underperform** relative to Clothing and Accessories — pricing, assortment, or product presentation are the likely levers, and reducing reliance on two categories lowers overall revenue risk.
-3. **Add a review-score breakdown by category, subscription status, and location** before treating the 3.75 average as fully understood — right now it's a single number with no diagnostic power behind it.
-4. **Verify the Montana-over-California result** before reallocating any marketing budget toward it — confirm the location panel isn't truncated and that the sample size behind Montana is large enough to trust.
-5. **Keep marketing broad across gender and age group** rather than narrowly targeted — the data shows a genuinely balanced customer base on both dimensions, so segmentation effort is better spent elsewhere (subscription status, category).
+1. **Grow the Export channel deliberately.** It's already the most margin-efficient channel at 38.01% but only 14.6% of revenue. Shifting even a modest share of investment or sales focus from Wholesale toward Export is likely to lift blended margin without a proportional loss in revenue.
+2. **Audit pricing and cost structure on Product 26 and Product 25 specifically.** They carry the largest share of total revenue but sit outside the top-margin tier — a small margin improvement on these two products alone would move company-wide profitability more than a similar gain on a smaller product.
+3. **Run a proper margin-driver analysis** (customer segment, channel, discount level) rather than assuming price tier explains profitability — the scatter plot shows it doesn't, and Export's outsized margin suggests channel strategy is a stronger lever than pricing alone.
+4. **Investigate why Northeast trails the other three regions by 9–13 points of revenue share** — determine whether it's market saturation, weaker sales coverage, or a genuine product-market fit gap before deciding whether to invest further or reallocate resources.
+5. **Reconcile the two conflicting profit-by-month views** before either is used in forecasting or planning — this is a data-engineering fix, but it directly protects the reliability of every seasonal finding above it.
+
+---
+
+## Tools & technologies
+
+| Area | Technology |
+|---|---|
+| Data Cleaning & EDA | Python (Pandas, NumPy, Matplotlib, Seaborn) |
+| Source Data | Excel |
+| Visualization | Power BI |
+| Development | Jupyter Notebook |
+
+---
+
+## Project structure
+
+```text
+sales-analytics-project/
+├── Regional Sales Dataset.xlsx      # Raw dataset
+├── Sales data after EDA.csv         # Cleaned dataset after analysis
+├── sales_analytics.ipynb            # Data cleaning & exploratory analysis (Python)
+├── sales analysis dashboard.pbix    # Power BI dashboard
+├── README.md                        # Project documentation
+└── LICENSE                          # License file
+```
 
 ---
 
@@ -103,78 +147,27 @@ There's no cut of review score by category, subscription status, or location, so
 git clone <repository-url>
 cd <repository-folder>
 
-# 2. Run the Python analysis
-jupyter notebook customer_behavior_of_shopping.ipynb
+# 2. Run the Python notebook
+jupyter notebook sales_analytics.ipynb
 
-# 3. Execute the SQL queries
-# Open customer_behavior_analysis.sql in your SQL environment and run the queries
-
-# 4. Open the Power BI dashboard
-# Launch Power BI Desktop and open customer_behavior_dashboard.pbix
-```
-
----
-
-## Tools & technologies
-
-| Area | Technology |
-|---|---|
-| Data Cleaning & EDA | Python |
-| Business Analysis | SQL |
-| Visualization | Power BI |
-| Development | Jupyter Notebook |
-
----
-
-## Project structure
-
-```text
-customer-behavior-analysis/
-├── customer_behavior_of_shopping.ipynb   # Data preparation, cleaning & EDA (Python)
-├── customer_behavior_analysis.sql        # SQL queries for business analysis
-├── customer_behavior_dashboard.pbix      # Power BI dashboard for visualization
-├── README.md                             # Project documentation
-└── LICENSE                               # License file
+# 3. Open the Power BI dashboard
+# Open "sales analysis dashboard.pbix" in Power BI Desktop
 ```
 
 ---
 
 ## Use cases
 
-- Retail analytics and customer segmentation
-- Subscription and retention strategy
-- Marketing optimization by category and demographic
-- Business intelligence reporting for stakeholder decision-making
+- Sales performance tracking across regions, channels, and products
+- Business decision support for pricing and channel investment
+- Revenue and margin optimization
+- Regional and account-level strategy planning
 
 ---
 
-## Future improvements
-
-- **A review-score dimension** joined to category, subscription status, and location, so satisfaction can be diagnosed rather than just reported as one average
-- **Full validation of the location dataset**, confirming whether the four-state view is complete or truncated before it drives budget decisions
-- **Machine learning models** to predict subscription conversion likelihood, so the campaign in recommendation #1 can be targeted rather than blanket
-- **Automated reporting pipeline** connecting the notebook, SQL layer, and Power BI refresh into a single scheduled process
-- **Deployment as a web-based dashboard** for easier stakeholder access outside of Power BI Desktop
-
----
-
-## License
-
-This project is licensed under the terms specified in the `LICENSE` file.
 
 ## Author
 
 **Mohd Faizanul Haque**
 Data Analytics · Business Intelligence · Analytics Engineering
-
----
-
-## Author
-
-**Mohd Faizanul Haque**
-Data Analytics · Business Intelligence · Analytics Engineering
-
-
-
-
 
